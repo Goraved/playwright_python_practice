@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 rm -r allure-results/*
-
-source venv/bin/activate
-pip install -r requirements.txt --quiet
-
+HEADLESS=true
 pytest -n auto tests --alluredir allure-results
 
-allure serve
+allure generate allure-results --clean -o allure-report

@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 import allure
 import pytest
@@ -20,7 +21,7 @@ def event_loop():
 
 @pytest.fixture(scope='session')
 async def page():
-    browser = await chromium.launch(headless=False)
+    browser = await chromium.launch(headless=os.getenv('HEADLESS', False))
     page = await browser.newPage()
     global PAGE
     PAGE = page

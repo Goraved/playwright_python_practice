@@ -11,9 +11,7 @@ fast.
 ###
 Anyway, I won't recommend this tool to young Python AQA engineers.
 
-### [Video](https://drive.google.com/open?id=1P6SXIADubK4k5EXOnd5ZSPeo4n7GEG0p)
+### [Video](https://drive.google.com/file/d/1K2uUlXASjPOiCbCbYkqmuHN26em7bPHs/view?usp=sharing)
 
-## Docker
-Execute tests - `docker-compose run tests`
-
-Rebuild container - `docker-compose build --no-cache setup`
+## Docker (need to finish)
+Execute tests - `run_docker.sh`
