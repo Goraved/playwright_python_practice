@@ -1,4 +1,5 @@
 import allure
+import pytest
 from allure_commons._allure import step
 
 from page_objects.registation.registration_object import RegistrationPage

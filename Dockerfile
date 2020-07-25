@@ -37,9 +37,7 @@ RUN apt-get install -y libnss3 \
                        libxss1 \
                        libasound2
 
-RUN mkdir /playwright_tests
-WORKDIR /playwright_tests
-COPY * /playwright_tests/
+ADD requirements.txt /
 
 RUN pip install --upgrade pip && \
     pip install virtualenv && \
@@ -47,6 +45,4 @@ RUN pip install --upgrade pip && \
     . /opt/venv/bin/activate && \
     python3.7 -m pip install -r requirements.txt --quiet
 
-ADD . /playwright_tests
-
-CMD . /opt/venv/bin/activate && sh execute_tests.sh
+WORKDIR /app

@@ -21,7 +21,8 @@ def event_loop():
 
 @pytest.fixture(scope='session')
 async def page():
-    browser = await chromium.launch(headless=os.getenv('HEADLESS', False))
+    headless = True if os.getenv('HEADLESS').lower() == 'true' else False
+    browser = await chromium.launch(headless=headless)
     page = await browser.newPage()
     global PAGE
     PAGE = page
