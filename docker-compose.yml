@@ -7,6 +7,8 @@ services:
       - setup
     volumes:
       - .:/app
+    environment:
+      - DOCKER_RUN=True
   setup:
     build:
       context: .

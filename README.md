@@ -13,7 +13,7 @@ Anyway, I won't recommend this tool to young Python AQA engineers.
 
 ### [Video](https://drive.google.com/file/d/1K2uUlXASjPOiCbCbYkqmuHN26em7bPHs/view?usp=sharing)
 
-## Docker (need to finish)
+## Docker
 Execute tests - `docker-compose run tests`
 
 Rebuild container - `docker-compose build --no-cache setup`
