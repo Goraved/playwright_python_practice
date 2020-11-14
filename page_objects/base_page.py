@@ -1,5 +1,5 @@
 import allure
-from playwright.helper import TimeoutError as TE
+from playwright.helper import TimeoutError as TError
 from playwright.page import Page
 
 
@@ -8,46 +8,47 @@ class BasePage:
         self.page = page
 
     @allure.step('Click locator - {locator}')
-    async def click(self, locator):
-        await self.page.click(locator)
+    def click(self, locator: str):
+        self.page.click(locator)
 
     @allure.step('Check checkbox locator - {locator}')
-    async def check(self, locator):
-        await self.page.check(locator)
+    def check(self, locator: str):
+        self.page.check(locator)
 
     @allure.step('Uncheck checkbox locator - {locator}')
-    async def uncheck(self, locator):
-        await self.page.check(locator)
+    def uncheck(self, locator: str):
+        self.page.check(locator)
 
     @allure.step('Hover locator - {locator}')
-    async def hover(self, locator):
-        await self.page.hover(locator)
+    def hover(self, locator: str):
+        self.page.hover(locator)
 
     @allure.step('Go to url - {url}')
-    async def go_to_url(self, url):
-        await self.page.goto(url)
+    def go_to_url(self, url: str):
+        self.page.goto(url)
 
     @allure.step('Type text - {text} into locator - {locator}')
-    async def type(self, locator, text):
-        await self.click(locator)
-        await self.page.fill(locator, text)
+    def type(self, locator: str, text: str):
+        self.click(locator)
+        self.page.fill(locator, text)
 
     @allure.step('Select option - {option} in locator - {locator}')
-    async def select_option(self, locator, option):
-        await self.page.selectOption(locator, option)
+    def select_option(self, locator: str, option: str):
+        self.page.selectOption(locator, option)
 
     @allure.step('Is element - {locator} present')
-    async def is_element_present(self, locator):
+    def is_element_present(self, locator: str) -> bool:
         try:
-            await self.page.waitForSelector(locator)
+            self.page.waitForSelector(locator)
             return True
-        except TE:
+        except TError:
             return False
 
     @allure.step('Is element - {locator} hidden')
-    async def is_element_present(self, locator):
+    def is_element_hidden(self, locator: str) -> bool:
         try:
-            await self.page.waitForSelector(locator, {'state': 'hidden'})
+            self.page.waitForSelector(locator, state='hidden')
             return True
-        except TE:
+        except TError:
             return False
+

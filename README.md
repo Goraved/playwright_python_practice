@@ -5,11 +5,11 @@ Just a [Playwright Python](https://github.com/Microsoft/playwright-python) tool 
 1. Run tests `execute_tests.sh`
 
 ## Notes:
-I didn't enjoy this tool, cause it's very complicated. It totally looks like it just has been translated 
-from JS Playwright and need to wright on Python usign JS style. So annoying. But this tools is pretty 
-fast.
+Pretty interesting and fast-growing tool for test automation. It can have some troubles with the first setup 
+(especially with Docker), but generally this tool faster than Selenium and have pretty nice facade methods out of the box.
 
-Anyway, I won't recommend this tool to young Python AQA engineers.
+It's hard to say if I can recommend this tool to young Python AQA engineers because Selenium is a standard 
+and supports by W3C. But if you have a small project, then it can be a wise choice to use Playwright.
 
 ### [Video](https://drive.google.com/file/d/1K2uUlXASjPOiCbCbYkqmuHN26em7bPHs/view?usp=sharing)
 

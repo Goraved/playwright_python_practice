@@ -3,7 +3,7 @@ import os
 
 import allure
 import pytest
-from playwright import chromium
+from playwright import sync_playwright
 
 
 # Will mark all the tests as async
@@ -20,23 +20,24 @@ def event_loop():
 
 
 @pytest.fixture(scope='session')
-async def page():
-    if os.getenv('DOCKER_RUN'):
-        browser = await chromium.launch(headless=True, args=['--no-sandbox'])
-    else:
-        browser = await chromium.launch(headless=False)
-    page = await browser.newPage()
-    global PAGE
-    PAGE = page
-    yield page
-    await browser.close()
+def page():
+    with sync_playwright() as play:
+        if os.getenv('DOCKER_RUN'):
+            browser = play.chromium.launch(headless=True, args=['--no-sandbox'])
+        else:
+            browser = play.firefox.launch(headless=False)
+        page = browser.newPage()
+        global PAGE
+        PAGE = page
+        yield page
+        browser.close()
 
 
 PAGE = None
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
+def pytest_runtest_makereport():
     outcome = yield
     test_result = outcome.get_result()
 
@@ -48,6 +49,6 @@ def pytest_runtest_makereport(item, call):
             allure.attach(screenshot, name='screenshot', attachment_type=allure.attachment_type.PNG)
 
 
-async def get_screenshot():
+def get_screenshot():
     global PAGE
-    return await PAGE.screenshot()
+    return PAGE.screenshot()
