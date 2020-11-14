@@ -51,4 +51,3 @@ class BasePage:
             return True
         except TError:
             return False
-
