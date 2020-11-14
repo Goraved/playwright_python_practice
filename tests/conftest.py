@@ -1,4 +1,3 @@
-import asyncio
 import os
 
 import allure
@@ -6,26 +5,13 @@ import pytest
 from playwright import sync_playwright
 
 
-# Will mark all the tests as async
-def pytest_collection_modifyitems(items):
-    for item in items:
-        item.add_marker(pytest.mark.asyncio)
-
-
-@pytest.fixture(scope="session")
-def event_loop():
-    loop = asyncio.get_event_loop()
-    yield loop
-    loop.close()
-
-
 @pytest.fixture(scope='session')
 def page():
     with sync_playwright() as play:
-        if os.getenv('DOCKER_RUN'):
+        if os.getenv('DOCKER_RUN') or os.getenv('GITHUB_RUN'):
             browser = play.chromium.launch(headless=True, args=['--no-sandbox'])
         else:
-            browser = play.firefox.launch(headless=False)
+            browser = play.chromium.launch(headless=False)
         page = browser.newPage()
         global PAGE
         PAGE = page
@@ -44,11 +30,7 @@ def pytest_runtest_makereport():
     if test_result.when in ["setup", "call"]:
         xfail = hasattr(test_result, 'wasxfail')
         if test_result.failed or (test_result.skipped and xfail):
-            loop = asyncio.get_event_loop()
-            screenshot = loop.run_until_complete(get_screenshot())
-            allure.attach(screenshot, name='screenshot', attachment_type=allure.attachment_type.PNG)
-
-
-def get_screenshot():
-    global PAGE
-    return PAGE.screenshot()
+            global PAGE
+            if PAGE:
+                allure.attach(PAGE.screenshot(), name='screenshot', attachment_type=allure.attachment_type.PNG)
+                allure.attach(PAGE.content(), name='html_source', attachment_type=allure.attachment_type.HTML)

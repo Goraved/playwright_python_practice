@@ -2,8 +2,6 @@
 source venv/bin/activate
 echo "-> Installing dependencies"
 pip install -r requirements.txt --quiet
-echo "-> Installing Playwright browsers"
-python3.7 -m playwright install
 
 echo "-> Removing old Allure results"
 rm -r allure-results/* || echo "No results"

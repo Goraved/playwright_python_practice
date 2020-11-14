@@ -10,8 +10,9 @@ from page_objects.shop.shop_object import ShopPage
 
 @allure.story('Shop')
 class TestShop:
+    @staticmethod
     @allure.title('Order T-Shirt')
-    def test_order_t_shirt(self, page):
+    def test_order_t_shirt(page):
         shop_page = ShopPage(page)
         registration_page = RegistrationPage(page)
         with step('Open site'):
@@ -31,9 +32,10 @@ class TestShop:
         with step('Check at least 1 order present'):
             assert shop_page.is_order_present(), 'Order missed'
 
+    @staticmethod
     @allure.title('Negative to check attachments')
-    @pytest.mark.skipif(os.getenv('GITHUB_RUN'), reason='To avoid build failing')
-    def test_negative(self, page):
+    @pytest.mark.skipif(os.getenv('GITHUB_RUN') is not None, reason='GitHub actions')
+    def test_negative(page):
         shop_page = ShopPage(page)
         with step('Open site'):
             shop_page.open_site()
