@@ -1,10 +1,10 @@
-from page_objects.base_page import BasePage
-from page_objects.shop.shop_locators import ShopLocators
+from pages.common.base_page import BasePage
+from pages.shop.shop_locators import ShopLocators
 
 
 class ShopPage(BasePage):
     def open_site(self):
-        self.go_to_url('http://automationpractice.com/index.php')
+        self.open('http://automationpractice.com/index.php')
 
     def open_t_shirt_category(self):
         self.click(ShopLocators.T_SHIRT_CATEGORY_BTN)

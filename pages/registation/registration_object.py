@@ -1,7 +1,7 @@
 from random import randint
 
-from page_objects.base_page import BasePage
-from page_objects.registation.registration_locators import RegistrationLocators
+from pages.common.base_page import BasePage
+from pages.registation.registration_locators import RegistrationLocators
 
 
 class RegistrationPage(BasePage):
