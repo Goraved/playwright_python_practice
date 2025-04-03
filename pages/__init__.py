@@ -2,8 +2,10 @@ from functools import cached_property
 
 from playwright.sync_api import Page
 
-from pages.registation.registration_object import RegistrationPage
-from pages.shop.shop_object import ShopPage
+from pages.login.login_page import LoginPage
+from pages.shop.cart_page import CartPage
+from pages.shop.checkout_form import CheckoutForm
+from pages.shop.products_page import ProductsPage
 
 
 class Pages:
@@ -16,9 +18,17 @@ class Pages:
 
     # Top-level pages
     @cached_property
-    def shop_page(self) -> ShopPage:
-        return ShopPage(self.page)
+    def products_page(self) -> ProductsPage:
+        return ProductsPage(self.page)
 
     @cached_property
-    def registration_page(self) -> RegistrationPage:
-        return RegistrationPage(self.page)
+    def cart_page(self) -> CartPage:
+        return CartPage(self.page)
+
+    @cached_property
+    def checkout_form(self) -> CheckoutForm:
+        return CheckoutForm(self.page)
+
+    @cached_property
+    def login_page(self) -> LoginPage:
+        return LoginPage(self.page)

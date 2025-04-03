@@ -1,5 +1,6 @@
 jinja2
 playwright
+pre-commit
 psutil
 pytest
 pytest-asyncio

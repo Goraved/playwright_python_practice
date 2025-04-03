@@ -749,7 +749,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Create CSV headers with Ukrainian titles
-    const headers = ['ID тест сценарію', 'Назва тесту', 'Автотест', 'Тривалість', 'Статус', 'Бізнес процес', 'Посилання на сценарій'];
+    const headers = ['ID', 'Title', 'Name', 'Duration', 'Status', 'Link'];
     let csvContent = headers.join(',') + '\n';
 
     // Add each filtered row to CSV
@@ -777,7 +777,6 @@ document.addEventListener('DOMContentLoaded', function() {
         escapeCSV(testPath),
         escapeCSV(duration),
         escapeCSV(status),
-        escapeCSV(bpId),
         escapeCSV(caseLink)
       ].join(',');
 

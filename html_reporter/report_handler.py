@@ -163,7 +163,7 @@ class TestResult:
             Dict containing test metadata
         """
         metadata = {}
-        for mark in item.own_markers:
+        for index, mark in enumerate(item.own_markers):
             if mark.name == "meta":
                 for key, value in mark.kwargs.items():
                     if isinstance(value, type):
@@ -180,7 +180,7 @@ class TestResult:
                     if isinstance(arg, list):
                         for param in arg:
                             # Match parameter value with the one from test name
-                            if hasattr(param, 'values') and param.id == param_value:
+                            if hasattr(param, 'values') and param.id == param_value.split('-')[index]:
                                 for value in param.values:
                                     if hasattr(value, 'mark') and value.mark.name == 'meta':
                                         for key, val in value.mark.kwargs.items():
@@ -398,36 +398,35 @@ def get_pytest_metadata() -> dict[str, Union[str, dict[str, str]]]:
 
 def generate_human_readable_summary(results: list[dict], stats: dict, slow_test_threshold_sec: int = 120) -> str:
     """
-    Generate the ULTIMATE human-readable and action-packed test run summary,
-    crafted in HTML for better styling and web presentation.
+    Create a comprehensive HTML-formatted test run summary with actionable insights.
 
-    This summary delivers:
-    - Crystal-clear, engaging, and conversational tone
-    - Actionable insights and prioritized recommendations
-    - Detailed diagnostics across test statuses, performance, reliability, and reruns
-    - A laser focus on immediate next steps for the team
+    Delivers a complete overview with:
+    - Clear and engaging information about test results
+    - Useful recommendations based on test outcomes
+    - Detailed analysis across different test aspects
+    - Practical next steps for the team
     """
 
     if not results:
-        return "🚨 <b>CODE RED: Test Results MIA!</b> 🚨<br>We have a critical situation &ndash; no test results were found. Possible culprits: test execution failures, incorrect report directory, or deeper system issues. <b>Immediate attention and troubleshooting required!</b>"
+        return "🚨 <b>ALERT: No Test Results Found!</b> 🚨<br>Critical issue detected &ndash; test results are missing. This could be due to execution failures, wrong report location, or system issues. <b>Investigation needed immediately!</b>"
 
-    # --- 🔍 Run Overview: The Big Picture ---
+    # --- 📊 Overall Summary Stats ---
     total_tests = stats['total']
     pass_rate = (stats['passed'] / total_tests * 100) if total_tests > 0 else 0
 
-    # --- 🚨 Situation Message Based on Pass Rate ---
+    # --- 🎯 Overall Assessment Based on Pass Rate ---
     if pass_rate == 100:
-        situation_message = "🌟 Perfection Achieved: All tests passed flawlessly. Outstanding work!"
+        situation_message = "🌟 Complete Success: Every single test passed successfully. Excellent work!"
     elif pass_rate >= 95:
-        situation_message = "🏆 Exceptional performance: nearly all tests passed with flying colors!"
+        situation_message = "🏆 Outstanding Result: The vast majority of tests passed successfully!"
     elif pass_rate >= 90:
-        situation_message = "🎉 Great performance: a very high pass rate, with only minor issues remaining."
+        situation_message = "🎉 Very Good Result: High pass rate with just a few issues to address."
     elif pass_rate >= 80:
-        situation_message = "👍 Solid performance: a good pass rate, though there is room for improvement."
+        situation_message = "👍 Good Result: Decent pass rate, though improvements are needed."
     elif pass_rate >= 60:
-        situation_message = "⚠️ Moderate performance: several tests failed or errored; attention needed."
+        situation_message = "⚠️ Attention Required: Multiple test failures detected; investigation needed."
     else:
-        situation_message = "🚨 Critical performance alert: the pass rate is extremely low; immediate action required!"
+        situation_message = "🚨 Critical Situation: Very low pass rate; requires immediate investigation!"
 
     earliest_start_time = stats['start_time']
     latest_end_time = stats['end_time']
@@ -438,55 +437,55 @@ def generate_human_readable_summary(results: list[dict], stats: dict, slow_test_
     rerun_tests = [r for r in results if r['outcome'] == "rerun"]
 
     high_level_summary = (
-        f"📊 <b>Executive Test Dashboard</b> 📊<br>"
-        f"- <b>Total Tests Executed:</b> {total_tests} brave test warriors ventured into battle!<br>"
-        f"- <b>Overall Pass Rate:</b> {pass_rate:.1f}% &ndash; Our crucial quality indicator.<br>"
-        f"- <b>Total Run Time:</b> {formatted_runtime} &ndash; Keeping an eye on efficiency.<br>"
-        f"- <b>Key Issues:</b> {stats['failed']} failures, {stats['error']} errors, {stats['rerun']} reruns, {len(slow_tests)} sluggish tests. Our immediate action items."
+        f"📊 <b>Test Run Summary</b> 📊<br>"
+        f"- <b>Tests Executed:</b> {total_tests} tests were run in this session<br>"
+        f"- <b>Pass Rate:</b> {pass_rate:.1f}% &ndash; Our key quality metric<br>"
+        f"- <b>Duration:</b> {formatted_runtime} &ndash; Total execution time<br>"
+        f"- <b>Main Issues:</b> {stats['failed']} failures, {stats['error']} errors, {stats['rerun']} reruns, {len(slow_tests)} slow tests. Priority items to address."
     )
 
-    # --- 🚦 Status Breakdown: Decoding the Test Results ---
+    # --- 📈 Status Details: Breaking Down Test Results ---
     total_failing = stats['failed'] + stats['error'] + stats['xfailed']
     status_messages = []
 
     if total_failing == 0 and stats['passed'] == total_tests:
         status_messages.append(
-            "🏆 <b>Perfection Achieved: 100% Tests Passing!</b> 🏆<br>An immaculate test run! Savor this moment, but remember &ndash; vigilance is key. Keep pushing forward!")
+            "🏆 <b>Perfect Score: All Tests Passed!</b> 🏆<br>Flawless execution! A rare achievement to celebrate, but stay vigilant and keep improving!")
     else:
-        status_messages.append("🔎 <b>Detailed Test Status Diagnostics:</b>")
+        status_messages.append("🔎 <b>Test Status Breakdown:</b>")
         status_messages.extend([
-            f"  ✅ <b>{stats['passed']} Tests Passed ({pass_rate:.1f}%):</b> The backbone of our test suite. Nurture and expand this group.",
-            f"  ❌ <b>{stats['failed']} Tests Failed ({(stats['failed'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Top priority &ndash; every failure is an opportunity for improvement. Dive into these ASAP.",
-            f"  ⚠️ <b>{stats['error']} Errors Encountered ({(stats['error'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Triage needed. Focus on environment stability and test setup.",
-            f"  🔄 <b>{stats['rerun']} Tests Rerun ({(stats['rerun'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Reruns can mask underlying problems. Investigate rerun patterns and reasons.",
-            f"  ⏩ <b>{stats['skipped']} Tests Skipped ({(stats['skipped'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Review skipped tests. Are we bypassing critical checks?",
-            f"  ❎ <b>{stats['xfailed']} Expected Failures ({(stats['xfailed'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Known issues lurking. Prioritize fixes to shift these to passing.",
-            f"  ❗ <b>{stats['xpassed']} Unexpected Passes ({(stats['xpassed'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Surprising, but validate before celebrating &ndash; ensure it's genuine progress."
+            f"  ✅ <b>{stats['passed']} Passed Tests ({pass_rate:.1f}%):</b> The foundation of our test coverage. Continue to maintain and expand.",
+            f"  ❌ <b>{stats['failed']} Failed Tests ({(stats['failed'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Highest priority issues &ndash; each failure represents an area for improvement.",
+            f"  ⚠️ <b>{stats['error']} Errors ({(stats['error'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Need assessment. Focus on environment issues and test setup problems.",
+            f"  🔄 <b>{stats['rerun']} Rerun Tests ({(stats['rerun'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Reruns often indicate intermittent issues. Important to analyze patterns.",
+            f"  ⏩ <b>{stats['skipped']} Skipped Tests ({(stats['skipped'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Evaluate skipped tests. Are we missing important validations?",
+            f"  ❎ <b>{stats['xfailed']} Expected Failures ({(stats['xfailed'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Known issues to prioritize for future fixes.",
+            f"  ❗ <b>{stats['xpassed']} Unexpected Passes ({(stats['xpassed'] / total_tests * 100 if total_tests else 0):.1f}%):</b> Surprising results &ndash; verify if these represent genuine improvements."
         ])
 
         if stats['failed'] + stats['error'] + stats['rerun'] > 0:
             status_messages.append(
-                "<br>⚡ <b>Urgent Action Items:</b> Laser focus on resolving failures, errors, and tests requiring reruns. These are our top quality blockers.")
+                "<br>⚡ <b>Priority Actions:</b> Focus on fixing failures, errors, and tests needing reruns. These represent our main quality blockers.")
 
-    # --- 🏎️ Performance Review: Spotting Speed Bumps ---
+    # --- ⏱️ Performance Analysis: Finding Speed Issues ---
     fast_tests = sorted(results, key=lambda x: x['duration'])
     min_test = fast_tests[0] if fast_tests else None
     max_test = fast_tests[-1] if fast_tests else None
 
     min_test_msg = (
-        f"🥇 <b>Fastest Test:</b> <code>{min_test['nodeid']}</code> &ndash; blazed through in just {min_test['duration']:.2f} seconds!"
+        f"🥇 <b>Fastest Test:</b> <code>{min_test['nodeid']}</code> &ndash; completed in only {min_test['duration']:.2f} seconds!"
         if min_test else "No test duration data available."
     )
 
     max_test_msg = (
-        f"🐌 <b>Slowest Test:</b> <code>{max_test['nodeid']}</code> &ndash; took a whopping {max_test['duration']:.2f} seconds. Let's optimize this slowpoke!"
+        f"🐌 <b>Slowest Test:</b> <code>{max_test['nodeid']}</code> &ndash; required {max_test['duration']:.2f} seconds. Consider optimizing this test!"
         if max_test else "No test duration data available."
     )
 
-    # Calculate percentage of slow tests
+    # Calculate slow tests percentage
     slow_tests_percent = (len(slow_tests) / total_tests * 100) if total_tests > 0 else 0
     slow_test_stats = (
-        f"⏱️ <b>Slow Test Stats:</b> {len(slow_tests)} tests ({slow_tests_percent:.1f}%) took longer than {slow_test_threshold_sec / 60:.0f} minutes to complete."
+        f"⏱️ <b>Slow Test Analysis:</b> {len(slow_tests)} tests ({slow_tests_percent:.1f}%) exceeded {slow_test_threshold_sec / 60:.0f} minutes runtime."
     )
 
     if slow_tests:
@@ -506,29 +505,29 @@ def generate_human_readable_summary(results: list[dict], stats: dict, slow_test_
         }
 
         optimization_msg_lines = [
-            f"⏱️ <b>{len(slow_tests)} Sluggish Tests Detected (&gt;{slow_test_threshold_sec / 60:.0f} min):</b> Time for some serious performance tuning!"]
+            f"⏱️ <b>{len(slow_tests)} Slow Tests Identified (&gt;{slow_test_threshold_sec / 60:.0f} min):</b> Performance improvements needed!"]
         for category, tests in categorized_slow_tests.items():
             if tests:
                 example_test_name = tests[0]['nodeid'].split("::")[-1] if "::" in tests[0]['nodeid'] else tests[0][
                     'nodeid']
                 optimization_msg_lines.append(
-                    f"  &ndash; <b>{category}:</b> {len(tests)} slowpokes found (e.g., <code>{example_test_name}</code>...). Dig into these for optimization opportunities.")
+                    f"  &ndash; <b>{category}:</b> {len(tests)} slow tests found (e.g., <code>{example_test_name}</code>...). Potential area for optimization.")
 
-        optimization_msg_lines.append("<br>🚀 <b>Speed Booster Tactics:</b><br>"
-                                      "&ndash; <b>Profiling & Bottleneck Analysis:</b> Identify hotspots with surgical precision &ndash; drill down into method-level timings.<br>"
-                                      "&ndash; <b>Turbocharge with Parallelization:</b> Leverage concurrent test execution wherever feasible.<br>"
-                                      "&ndash; <b>Streamline with Mocks & Stubs:</b> Replace slow dependencies with lightning-fast mocks.<br>"
-                                      "&ndash; <b>Code & Logic Refinement:</b> Prune redundancies, optimize algorithms, and streamline test flows.<br>"
-                                      "&ndash; <b>Env & Data Tuning:</b> Ensure test env and test data are lean and mean for optimal performance.")
+        optimization_msg_lines.append("<br>🚀 <b>Performance Improvement Strategies:</b><br>"
+                                      "&ndash; <b>Profiling:</b> Identify performance bottlenecks through detailed timing analysis<br>"
+                                      "&ndash; <b>Parallelization:</b> Implement concurrent execution where possible<br>"
+                                      "&ndash; <b>Mock Objects:</b> Replace slow dependencies with faster test doubles<br>"
+                                      "&ndash; <b>Code Optimization:</b> Eliminate redundant code and improve algorithmic efficiency<br>"
+                                      "&ndash; <b>Environment Tuning:</b> Optimize test environment and data for better performance")
         optimization_msg = "<br>".join(optimization_msg_lines)
 
     else:
-        optimization_msg = "🏎️💨 <b>Full Speed Ahead!</b> Every test crossed the finish line in record time!"
+        optimization_msg = "🏎️💨 <b>Performance Excellence!</b> All tests completed within acceptable time limits!"
 
-    # --- 🐢 Slow Functions Analysis: Identifying Method-Level Bottlenecks ---
+    # --- 🔍 Slow Methods Analysis: Finding Method-Level Bottlenecks ---
     if 'slow_functions' in stats and stats['slow_functions']:
         slow_functions_lines = [
-            "<br>🐢 <b>Slow Functions Analysis:</b> Methods consistently taking too long across multiple tests:"
+            "<br>🐢 <b>Slow Methods Analysis:</b> Functions consistently taking too long across tests:"
         ]
 
         # Sort slow functions by frequency (most occurrences first)
@@ -536,56 +535,56 @@ def generate_human_readable_summary(results: list[dict], stats: dict, slow_test_
 
         for func_name, occurrence_count in sorted_slow_funcs:
             slow_functions_lines.append(
-                f"  &ndash; <code>{func_name}</code>: slow in <b>{occurrence_count}</b> test(s). Optimize this common bottleneck!"
+                f"  &ndash; <code>{func_name}</code>: slow in <b>{occurrence_count}</b> test(s). Optimization candidate!"
             )
 
         if sorted_slow_funcs:
             slow_functions_lines.append(
-                "<br>🔧 <b>Function Optimization Tips:</b><br>"
-                "&ndash; <b>Refactor Core Logic:</b> Look for redundant operations or inefficient algorithms.<br>"
-                "&ndash; <b>Optimize Wait Conditions:</b> Review explicit waits and timeout conditions.<br>"
-                "&ndash; <b>Cache Common Operations:</b> Avoid repeating expensive operations.<br>"
-                "&ndash; <b>Consider Parallel Execution:</b> Where possible, parallelize time-consuming operations."
+                "<br>🔧 <b>Method Optimization Recommendations:</b><br>"
+                "&ndash; <b>Logic Review:</b> Check for redundant code or inefficient algorithms<br>"
+                "&ndash; <b>Wait Logic:</b> Optimize explicit waits and timeout conditions<br>"
+                "&ndash; <b>Implement Caching:</b> Store results of expensive operations<br>"
+                "&ndash; <b>Parallel Execution:</b> Consider running operations concurrently when possible"
             )
 
         slow_functions_msg = "<br>".join(slow_functions_lines)
     else:
-        slow_functions_msg = "📊 <b>Function Timing Analysis:</b> No consistently slow functions detected across multiple tests."
+        slow_functions_msg = "📊 <b>Method Performance Analysis:</b> No consistently slow functions identified across tests."
 
-    # --- 🔁 Reruns Report Card: Analyzing Repeated Attempts ---
+    # --- 🔁 Rerun Analysis: Understanding Repeated Test Attempts ---
     if rerun_tests:
         rerun_msg_lines = [
-            f"🔄 <b>Rerun Roundup:</b> {len(rerun_tests)} tests went through reruns in this session.",
-            "<br>🤔 <b>Rerun Analysis:</b>",
-            f"  &ndash; <b>Rerun Rate:</b> {len(rerun_tests) / total_tests:.1%} of tests needed repeated attempts.",
-            f"  &ndash; <b>Max Attempts:</b> The most stubborn test, <code>{max(rerun_tests, key=lambda t: t.get('rerun_attempts', 0))['nodeid']}</code>, took {max(t.get('rerun_attempts', 0) for t in rerun_tests)} tries to pass.<br>",
-            "💡 <b>Rerun Reflections & Recommendations:</b>",
-            "  &ndash; Flaky tests may stem from unstable network conditions, timing issues, or intermittent backend glitches.",
-            "  &ndash; To reduce flakiness, consider adding explicit waits, refining synchronization, and ensuring a stable test environment.",
+            f"🔄 <b>Rerun Summary:</b> {len(rerun_tests)} tests required reruns during this execution.",
+            "<br>🤔 <b>Rerun Details:</b>",
+            f"  &ndash; <b>Rerun Percentage:</b> {len(rerun_tests) / total_tests:.1%} of tests needed multiple attempts.",
+            f"  &ndash; <b>Maximum Attempts:</b> Most challenging test, <code>{max(rerun_tests, key=lambda t: t.get('rerun_attempts', 0))['nodeid']}</code>, required {max(t.get('rerun_attempts', 0) for t in rerun_tests)} attempts.<br>",
+            "💡 <b>Addressing Flaky Tests:</b>",
+            "  &ndash; Common causes include network instability, timing issues, or intermittent service problems.",
+            "  &ndash; Fix strategies: improve wait mechanisms, enhance synchronization, and ensure stable test environments.",
         ]
         rerun_msg = "<br>".join(rerun_msg_lines)
     else:
-        rerun_msg = "🎯 <b>One-and-Done!</b> No reruns necessary &ndash; all tests passed on the first try!"
+        rerun_msg = "🎯 <b>First-Time Success!</b> No tests required reruns - all passed on their initial execution!"
 
-    # --- 📜 The Verdict: Final Test Run Assessment ---
+    # --- 📋 Final Assessment and Summary ---
     summary = (
-            f"<h4>🎬 <b>Analytical Test Run Commentary</b> 🎬</h1><br>"
+            f"<h4>🔍 <b>Test Run Analysis</b> 🔍</h1><br>"
             f"{situation_message}<br>"
             f"{high_level_summary}"
             f"<hr>"
-            f"<h5>1️⃣ <b>Test Execution Overview:</b></h5>"
-            f"- ⏰ Started At: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(earliest_start_time))}<br>"
-            f"- ⏰ Finished At: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(latest_end_time))}<br>"
-            f"- 📈 Total Runtime: {formatted_runtime}<br>"
-            f"<br><h5>2️⃣ <b>Test Status Specifics:</b></h5>" + "<br>".join(status_messages) + "<br>"
-                                                                                               f"<br><h5>3️⃣ <b>Performance Post-Mortem:</b></h5>"
-                                                                                               f"- {slow_test_stats}<br>"
-                                                                                               f"- {min_test_msg}<br>"
-                                                                                               f"- {max_test_msg}<br>"
-                                                                                               f"- {optimization_msg}<br>"
-                                                                                               f"- {slow_functions_msg}<br>"
-                                                                                               f"<br><h5>4️⃣ <b>Reruns Retrospective:</b></h5><br>"
-                                                                                               f"- {rerun_msg}<br>"
+            f"<h5>1️⃣ <b>Execution Details:</b></h5>"
+            f"- ⏰ Start Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(earliest_start_time))}<br>"
+            f"- ⏰ End Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(latest_end_time))}<br>"
+            f"- 📈 Total Duration: {formatted_runtime}<br>"
+            f"<br><h5>2️⃣ <b>Test Result Details:</b></h5>" + "<br>".join(status_messages) + "<br>"
+                                                                                             f"<br><h5>3️⃣ <b>Performance Analysis:</b></h5>"
+                                                                                             f"- {slow_test_stats}<br>"
+                                                                                             f"- {min_test_msg}<br>"
+                                                                                             f"- {max_test_msg}<br>"
+                                                                                             f"- {optimization_msg}<br>"
+                                                                                             f"- {slow_functions_msg}<br>"
+                                                                                             f"<br><h5>4️⃣ <b>Rerun Analysis:</b></h5><br>"
+                                                                                             f"- {rerun_msg}<br>"
     )
 
     return summary

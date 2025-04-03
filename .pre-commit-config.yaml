@@ -1,0 +1,54 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      # Run the linter.
+      - id: ruff
+        args: [ --fix ]
+
+  - repo: local
+    hooks:
+      - id: code-smell-check
+        name: Check code smells in pytest tests
+        entry: bash
+        language: system
+        pass_filenames: false
+        args:
+          - "-c"
+          - |
+            # Run analysis
+            output=$(python utils/code_smells.py --dir=tests)
+
+            echo "$output"
+
+            percentage=$(echo "$output" | grep "Percentage of 'smelly' tests: " | awk '{print $5}' | sed 's/%//')
+
+            # Check if percentage is numeric
+            if ! [[ "$percentage" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+              echo "Failed to determine the percentage of 'smelly' tests. Make sure the output contains the expected line."
+              exit 1
+            fi
+
+            # Now safely compare - if percentage is 50% or higher, block the commit
+            result=$(echo "$percentage >= 50" | bc)
+            if [ "$result" -eq 1 ]; then
+              echo "Too many 'smelly' tests (${percentage}%). Commit blocked!"
+              exit 1
+            else
+              echo "Acceptable level of 'smelly' tests (${percentage}%). Commit allowed."
+            fi
+
+        always_run: true
+        verbose: true
+
+      - id: framework-unit-tests
+        name: Run framework unit tests
+        entry: pytest
+        language: system
+        pass_filenames: false
+        args: [
+          "-m unit",
+          "-v"
+        ]
+        always_run: true
+        verbose: true
