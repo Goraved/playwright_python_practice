@@ -1,0 +1,397 @@
+<!--
+    ##################################################################
+    # Title: Automated Test Results Report
+    # Description: This template is used to generate reports on the results of testing
+    #              automated tests in the project.
+    # Author: Roman Pobotin
+    # Version: 1.0
+    # Creation Date: {{ today_date }}
+    # Usage: This template is designed for automated reporting of test results,
+    #        including details of tests performed, execution environment,
+    #        pass statistics, and timeline of test execution.
+    ##################################################################
+-->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Roman Pobotin - Playwright Python Practice Project"
+          name="author">
+    <meta content="Automated test results report. Template created for detailed analysis of test runs, including pass status, execution environment, and test timeline."
+          name="description">
+    <meta content="Testing, Test Automation, Test Report, QA Automation, Playwright, Python"
+          name="keywords">
+    <meta content="noindex, nofollow" name="robots">
+    <meta content="Playwright Python Report Generator v1.0" name="generator">
+    <meta content="Personal Practice Project" name="company">
+    <title>{{ title }} #{{ job_id }}</title>
+    <link href="data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iIzAwMDAwMCI+Cg08ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCIvPgoNPGcgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2U9IiNDQ0NDQ0MiIHN0cm9rZS13aWR0aD0iMTkuNDU2Ij4KDTxwYXRoIGZpbGw9IiM4MDAwMDAiIGQ9Ik0yNTguOCAxOS42N2MtNjQuMy0uMTktMTM4LjkgMTcuNDYtMTcxLjQ3IDUyLjQ4QzMuMDUgMTYyLjgtMTMuNDcgMzYxLjYgNzkuNDEgNDQzLjQgMTc3IDUyOS40IDM5Ny41IDQ5Ni45IDQ2NS40IDM4NmM0My03MC4zLTguOC0xOTAuOC03OC44LTIzNC40LTcxLjMtNDQuNS0yMDIuOC0zNi4zLTI1MCAzMy4yLTM1LjcgNTIuNy0xMC42IDE1Ny4zIDQ2LjYgMTg1LjMgNTYuOCAyNy44IDE1OS42LTE0LjggMTczLjctNzYuNSA3LjItMzEuNi0zMi4xLTY0LjktNjMuMy03NC0yOS43LTguNi04Mi41LTMuMi04OC43IDI3LjEtNS43IDI3LjYgMzkuMiA1NS40IDY0LjcgNTQuNiAxOC4yLS42LTQ3LjYtMjkuOC0zNi40LTQ1LjcgMTcuOC0yNS4zIDg2LjQtMSA4Ny43IDI5LjggMS45IDQzLjYtODEuMSA3Mi42LTEyMCA1Mi43LTQwLjUtMjAuOC01NS40LTk2LjktMjguNC0xMzMuNSAzNC44LTQ3LjIgMTI1LjYtNDcuMiAxNzUuMS0xNS45IDQ5LjYgMzEuNCA5MC40IDExNC44IDYwLjcgMTY1LjQtNDkuNiA4NC41LTIxNi4xIDExMC0yOTAuMyA0Ni03MS43Ny02MS45LTYxLjYtMjE0LjcgMi44LTI4NC4yQzE4MiA0OS42NCAzNjEuNyA2My4xNCAzOTAuNSA5Mi4yMWMxNy44IDI2Ljc5IDQ3LjYgNTguNjkgOTAuNyAzOC4xOS0yNi45LTcuNS00My4zLTIwLjktNTAuNS0zOC42NSAxNi45IDYuNDkgNDgtLjU0IDY0LjctNi40Ni0xMy4zLTE2LjIyLTU0LjYtNjUuNjEtOTIuOS00Mi45MyAwIDAtNjYtMjIuNDUtMTQzLjctMjIuNjl6TTQyMy4zIDUxLjhjOS41IDguMTkgMjUuOSAyMC43NSA0MC45IDI5LjQyIDAgMC0zNC45Ljk3LTQzLjItMTEuMzktMy40LTUuMDMtNy05LjQ2IDIuMy0xOC4wM3oiLz4KDTwvZz4KDTxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj4KDTxwYXRoIGZpbGw9IiM4MDAwMDAiIGQ9Ik0yNTguOCAxOS42N2MtNjQuMy0uMTktMTM4LjkgMTcuNDYtMTcxLjQ3IDUyLjQ4QzMuMDUgMTYyLjgtMTMuNDcgMzYxLjYgNzkuNDEgNDQzLjQgMTc3IDUyOS40IDM5Ny41IDQ5Ni45IDQ2NS40IDM4NmM0My03MC4zLTguOC0xOTAuOC03OC44LTIzNC40LTcxLjMtNDQuNS0yMDIuOC0zNi4zLTI1MCAzMy4yLTM1LjcgNTIuNy0xMC42IDE1Ny4zIDQ2LjYgMTg1LjMgNTYuOCAyNy44IDE1OS42LTE0LjggMTczLjctNzYuNSA3LjItMzEuNi0zMi4xLTY0LjktNjMuMy03NC0yOS43LTguNi04Mi41LTMuMi04OC43IDI3LjEtNS43IDI3LjYgMzkuMiA1NS40IDY0LjcgNTQuNiAxOC4yLS42LTQ3LjYtMjkuOC0zNi40LTQ1LjcgMTcuOC0yNS4zIDg2LjQtMSA4Ny43IDI5LjggMS45IDQzLjYtODEuMSA3Mi42LTEyMCA1Mi43LTQwLjUtMjAuOC01NS40LTk2LjktMjguNC0xMzMuNSAzNC44LTQ3LjIgMTI1LjYtNDcuMiAxNzUuMS0xNS45IDQ5LjYgMzEuNCA5MC40IDExNC44IDYwLjcgMTY1LjQtNDkuNiA4NC41LTIxNi4xIDExMC0yOTAuMyA0Ni03MS43Ny02MS45LTYxLjYtMjE0LjcgMi44LTI4NC4yQzE4MiA0OS42NCAzNjEuNyA2My4xNCAzOTAuNSA5Mi4yMWMxNy44IDI2Ljc5IDQ3LjYgNTguNjkgOTAuNyAzOC4xOS0yNi45LTcuNS00My4zLTIwLjktNTAuNS0zOC42NSAxNi45IDYuNDkgNDgtLjU0IDY0LjctNi40Ni0xMy4zLTE2LjIyLTU0LjYtNjUuNjEtOTIuOS00Mi45MyAwIDAtNjYtMjIuNDUtMTQzLjctMjIuNjl6TTQyMy4zIDUxLjhjOS41IDguMTkgMjUuOSAyMC43NSA0MC45IDI5LjQyIDAgMC0zNC45Ljk3LTQzLjItMTEuMzktMy40LTUuMDMtNy05LjQ2IDIuMy0xOC4wM3oiLz4KDTwvZz4KDTwvc3ZnPg=="
+          rel="icon" type="image/svg+xml">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap" rel="stylesheet">
+    <!-- Bootstrap & DataTables -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        {{ css_content }}
+    </style>
+</head>
+<body>
+<!-- Loader -->
+<div class="loader-container" id="loader">
+    <div class="loader-wrapper">
+        <svg class="loader-svg" fill="none" height="140" viewBox="0 0 140 140" width="140"
+             xmlns="http://www.w3.org/2000/svg">
+            <rect fill="none" height="136" rx="20" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" width="136" x="2"
+                  y="2"/>
+
+            <rect class="running-border" fill="none" height="136" opacity="1" rx="20" stroke="#800000" stroke-width="2"
+                  width="136" x="2" y="2"/>
+
+            <path class="border-path" clip-rule="evenodd"
+                  d="M140 0H0V140H140V0ZM70.0497 5H69.9206C55.9652 5 44.9963 4.99999 36.2479 6.28355C27.4492 7.57448 20.7724 10.1788 15.4764 15.4767C10.1806 20.7743 7.57632 27.4509 6.28493 36.2492C5 45.0034 5 55.9807 5 69.9503V70.0794C5 84.0348 4.99999 95.0037 6.28355 103.752C7.57448 112.551 10.1788 119.228 15.4767 124.524C20.7743 129.819 27.4509 132.424 36.2492 133.715C45.0037 135 55.9815 135 69.9518 135H70.0794H70.0799C84.035 135 95.0038 135 103.753 133.716C112.552 132.426 119.229 129.821 124.527 124.523C129.825 119.226 132.428 112.549 133.718 103.751C135 95.0093 135 84.0511 135 70.1107V70.1106V69.9206V69.9201C135 55.9649 135 44.9962 133.717 36.2479C132.426 27.4493 129.823 20.7725 124.527 15.4765C119.231 10.1806 112.554 7.5763 103.754 6.28492C94.9985 5 84.0193 5 70.0497 5ZM16.8909 16.8906C21.7749 12.0048 27.9846 9.51734 36.5382 8.26236C45.1255 7.00244 55.9498 7 70 7C84.0501 7 94.8753 7.00335 103.464 8.26373C112.018 9.51917 118.229 12.0067 123.113 16.8907C127.997 21.7748 130.484 27.9845 131.738 36.5382C132.998 45.1255 133 55.9498 133 70C133 84.0503 132.999 94.8736 131.74 103.461C130.485 112.014 127.999 118.223 123.113 123.109C118.227 127.995 112.016 130.483 103.462 131.738C94.8745 132.998 84.0502 133 70 133C55.9499 133 45.1265 132.997 36.5396 131.736C27.9864 130.481 21.7765 127.993 16.8906 123.109C12.0048 118.225 9.51734 112.015 8.26236 103.462C7.00244 94.8745 7 84.0502 7 70C7 55.9499 7.00335 45.1265 8.26372 36.5396C9.51915 27.9864 12.0067 21.7766 16.8909 16.8906Z"
+                  fill="transparent"
+                  fill-rule="evenodd"/>
+
+            <g transform="translate(70, 70) scale(0.2734375) translate(-256, -256)">
+                <path fill="#FFFFFF"
+                      d="M258.8 19.67c-64.3-.19-138.9 17.46-171.47 52.48C3.05 162.8-13.47 361.6 79.41 443.4 177 529.4 397.5 496.9 465.4 386c43-70.3-8.8-190.8-78.8-234.4-71.3-44.5-202.8-36.3-250 33.2-35.7 52.7-10.6 157.3 46.6 185.3 56.8 27.8 159.6-14.8 173.7-76.5 7.2-31.6-32.1-64.9-63.3-74-29.7-8.6-82.5-3.2-88.7 27.1-5.7 27.6 39.2 55.4 64.7 54.6 18.2-.6-47.6-29.8-36.4-45.7 17.8-25.3 86.4-1 87.7 29.8 1.9 43.6-81.1 72.6-120 52.7-40.5-20.8-55.4-96.9-28.4-133.5 34.8-47.2 125.6-47.2 175.1-15.9 49.6 31.4 90.4 114.8 60.7 165.4-49.6 84.5-216.1 110-290.3 46-71.77-61.9-61.6-214.7 2.8-284.2C182 49.64 361.7 63.14 390.5 92.21c17.8 26.79 47.6 58.69 90.7 38.19-26.9-7.5-43.3-20.9-50.5-38.65 16.9 6.49 48-.54 64.7-6.46-13.3-16.22-54.6-65.61-92.9-42.93 0 0-66-22.45-143.7-22.69z"></path>
+                <path fill="#FFFFFF"
+                      d="M423.3 51.8c9.5 8.19 25.9 20.75 40.9 29.42 0 0-34.9.97-43.2-11.39-3.4-5.03-7-9.46 2.3-18.03z"></path>
+            </g>
+        </svg>
+    </div>
+</div>
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex align-items-center mb-4">
+        <img class="logo"
+             src="data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iIzAwMDAwMCI+Cg08ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCIvPgoNPGcgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2U9IiNDQ0NDQ0MiIHN0cm9rZS13aWR0aD0iMTkuNDU2Ij4KDTxwYXRoIGZpbGw9IiM4MDAwMDAiIGQ9Ik0yNTguOCAxOS42N2MtNjQuMy0uMTktMTM4LjkgMTcuNDYtMTcxLjQ3IDUyLjQ4QzMuMDUgMTYyLjgtMTMuNDcgMzYxLjYgNzkuNDEgNDQzLjQgMTc3IDUyOS40IDM5Ny41IDQ5Ni45IDQ2NS40IDM4NmM0My03MC4zLTguOC0xOTAuOC03OC44LTIzNC40LTcxLjMtNDQuNS0yMDIuOC0zNi4zLTI1MCAzMy4yLTM1LjcgNTIuNy0xMC42IDE1Ny4zIDQ2LjYgMTg1LjMgNTYuOCAyNy44IDE1OS42LTE0LjggMTczLjctNzYuNSA3LjItMzEuNi0zMi4xLTY0LjktNjMuMy03NC0yOS43LTguNi04Mi41LTMuMi04OC43IDI3LjEtNS43IDI3LjYgMzkuMiA1NS40IDY0LjcgNTQuNiAxOC4yLS42LTQ3LjYtMjkuOC0zNi40LTQ1LjcgMTcuOC0yNS4zIDg2LjQtMSA4Ny43IDI5LjggMS45IDQzLjYtODEuMSA3Mi42LTEyMCA1Mi43LTQwLjUtMjAuOC01NS40LTk2LjktMjguNC0xMzMuNSAzNC44LTQ3LjIgMTI1LjYtNDcuMiAxNzUuMS0xNS45IDQ5LjYgMzEuNCA5MC40IDExNC44IDYwLjcgMTY1LjQtNDkuNiA4NC41LTIxNi4xIDExMC0yOTAuMyA0Ni03MS43Ny02MS45LTYxLjYtMjE0LjcgMi44LTI4NC4yQzE4MiA0OS42NCAzNjEuNyA2My4xNCAzOTAuNSA5Mi4yMWMxNy44IDI2Ljc5IDQ3LjYgNTguNjkgOTAuNyAzOC4xOS0yNi45LTcuNS00My4zLTIwLjktNTAuNS0zOC42NSAxNi45IDYuNDkgNDgtLjU0IDY0LjctNi40Ni0xMy4zLTE2LjIyLTU0LjYtNjUuNjEtOTIuOS00Mi45MyAwIDAtNjYtMjIuNDUtMTQzLjctMjIuNjl6TTQyMy4zIDUxLjhjOS41IDguMTkgMjUuOSAyMC43NSA0MC45IDI5LjQyIDAgMC0zNC45Ljk3LTQzLjItMTEuMzktMy40LTUuMDMtNy05LjQ2IDIuMy0xOC4wM3oiLz4KDTwvZz4KDTxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj4KDTxwYXRoIGZpbGw9IiM4MDAwMDAiIGQ9Ik0yNTguOCAxOS42N2MtNjQuMy0uMTktMTM4LjkgMTcuNDYtMTcxLjQ3IDUyLjQ4QzMuMDUgMTYyLjgtMTMuNDcgMzYxLjYgNzkuNDEgNDQzLjQgMTc3IDUyOS40IDM5Ny41IDQ5Ni45IDQ2NS40IDM4NmM0My03MC4zLTguOC0xOTAuOC03OC44LTIzNC40LTcxLjMtNDQuNS0yMDIuOC0zNi4zLTI1MCAzMy4yLTM1LjcgNTIuNy0xMC42IDE1Ny4zIDQ2LjYgMTg1LjMgNTYuOCAyNy44IDE1OS42LTE0LjggMTczLjctNzYuNSA3LjItMzEuNi0zMi4xLTY0LjktNjMuMy03NC0yOS43LTguNi04Mi41LTMuMi04OC43IDI3LjEtNS43IDI3LjYgMzkuMiA1NS40IDY0LjcgNTQuNiAxOC4yLS42LTQ3LjYtMjkuOC0zNi40LTQ1LjcgMTcuOC0yNS4zIDg2LjQtMSA4Ny43IDI5LjggMS45IDQzLjYtODEuMSA3Mi42LTEyMCA1Mi43LTQwLjUtMjAuOC01NS40LTk2LjktMjguNC0xMzMuNSAzNC44LTQ3LjIgMTI1LjYtNDcuMiAxNzUuMS0xNS45IDQ5LjYgMzEuNCA5MC40IDExNC44IDYwLjcgMTY1LjQtNDkuNiA4NC41LTIxNi4xIDExMC0yOTAuMyA0Ni03MS43Ny02MS45LTYxLjYtMjE0LjcgMi44LTI4NC4yQzE4MiA0OS42NCAzNjEuNyA2My4xNCAzOTAuNSA5Mi4yMWMxNy44IDI2Ljc5IDQ3LjYgNTguNjkgOTAuNyAzOC4xOS0yNi45LTcuNS00My4zLTIwLjktNTAuNS0zOC42NSAxNi45IDYuNDkgNDgtLjU0IDY0LjctNi40Ni0xMy4zLTE2LjIyLTU0LjYtNjUuNjEtOTIuOS00Mi45MyAwIDAtNjYtMjIuNDUtMTQzLjctMjIuNjl6TTQyMy4zIDUxLjhjOS41IDguMTkgMjUuOSAyMC43NSA0MC45IDI5LjQyIDAgMC0zNC45Ljk3LTQzLjItMTEuMzktMy40LTUuMDMtNy05LjQ2IDIuMy0xOC4wM3oiLz4KDTwvZz4KDTwvc3ZnPg==">
+        {% if job_url %}
+        <h1 class="page-title">{{ title }} - #<a href="{{ job_url }}" target="_blank">{{ job_id }}</a>
+        </h1>
+        {% else %}
+        <h1 class="page-title">{{ title }}</h1>
+        {% endif %}
+
+    </div>
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <button aria-controls="testSummary" aria-expanded="false"
+                    class="btn btn-link text-reset text-decoration-none p-0"
+                    data-bs-target="#testSummary" data-bs-toggle="collapse" type="button">
+                <h4 class="mb-0 d-flex align-items-center gap-2">
+                    <svg class="collapse-icon" fill="currentColor" height="16" viewBox="0 0 16 16" width="16">
+                        <path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                    Test Results Summary
+                </h4>
+            </button>
+            <button class="btn btn-link btn-sm p-0 text-muted d-flex align-items-center gap-2" id="reset-filters"
+                    title="Reset all filters" type="button">
+                <svg fill="currentColor" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                </svg>
+                Reset filters
+            </button>
+        </div>
+
+        <div class="row">
+            <div class="col-md">
+                <div class="summary-card badge-passed" data-status="passed" role="button"
+                     title="PASSED: The test ran successfully without any issues.">
+                    <h5 class="summary-card-title font-weight-medium">PASSED</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.passed }}</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="summary-card badge-failed" data-status="failed" role="button"
+                     title="FAILED: The test encountered an assertion failure or an unexpected error.">
+                    <h5 class="summary-card-title font-weight-medium">FAILED</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.failed }}</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="summary-card badge-error" data-status="error" role="button"
+                     title="ERROR: The test encountered a critical runtime error before it could complete.">
+                    <h5 class="summary-card-title font-weight-medium">ERROR</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.error|default(0) }}</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="summary-card badge-skipped" data-status="skipped" role="button"
+                     title="SKIPPED: The test was intentionally skipped, usually due to conditions like missing dependencies or markers.">
+                    <h5 class="summary-card-title font-weight-medium">SKIPPED</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.skipped }}</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="summary-card badge-xfailed" data-status="xfailed" role="button"
+                     title="XFAILED: The test was expected to fail and did fail, so it's not considered an issue.">
+                    <h5 class="summary-card-title font-weight-medium">XFAILED</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.xfailed|default(0) }}</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="summary-card badge-xpassed" data-status="xpassed" role="button"
+                     title="XPASSED: The test was expected to fail but unexpectedly passed, which may indicate a fixed issue.">
+                    <h5 class="summary-card-title font-weight-medium">XPASSED</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.xpassed|default(0) }}</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="summary-card badge-rerun" data-status="rerun" role="button"
+                     title="RERUN: Test is potentially flaky and needs investigation. The test failed initially but passed on retry.">
+                    <h5 class="summary-card-title font-weight-medium">RERUN</h5>
+                    <div class="fs-2 font-weight-bold">{{ stats.rerun|default(0) }}</div>
+                </div>
+            </div>
+            <div class="collapse mt-3" id="testSummary">
+                <div class="card card-body">
+                    <pre class="summary-content"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Results Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-header-title font-weight-semibold">Test Results</h5>
+            <button class="btn btn-primary font-weight-medium" id="export-csv">
+                <svg class="bi bi-download me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+                     width="16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                Export CSV
+            </button>
+        </div>
+        <div class="card-body">
+            <!-- Results Table -->
+            <div class="card card-table">
+                <div class="d-flex mb-3 px-3 pt-3 align-items-center">
+                    <div class="input-group w-50">
+            <span class="input-group-text" id="search-addon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+                     viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </span>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search tests..."
+                               aria-label="Search" aria-describedby="search-addon">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div id="resultsTableContainer" class="virtual-table"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Environment Section with Packages and Plugins -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Test Environment</h5>
+        </div>
+        <div class="card-body">
+            <div class="environment-info mb-4">
+                {% for key, value in environment.items() %}
+                <div class="env-item">
+                    <span class="meta-label font-weight-medium">{{ key }}:</span>
+                    <span class="meta-value font-weight-regular">{{ value }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Packages Section (Collapsible) -->
+            <div class="card mt-4">
+                <button aria-controls="packagesCollapse" aria-expanded="false"
+                        class="card-header w-100 text-start border-0 bg-transparent"
+                        data-bs-target="#packagesCollapse"
+                        data-bs-toggle="collapse"
+                        type="button">
+                    <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                        Packages
+                        <svg class="collapse-icon" fill="currentColor" height="16" viewBox="0 0 16 16" width="16">
+                            <path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </h5>
+                </button>
+                <div class="collapse" id="packagesCollapse">
+                    <div class="card-body">
+                        <div class="environment-info">
+                            <div class="env-item">
+                                <span class="meta-label">pytest:</span>
+                                <span class="meta-value">{{ metadata.pytest_version|default('N/A') }}</span>
+                            </div>
+                            <div class="env-item">
+                                <span class="meta-label">pluggy:</span>
+                                <span class="meta-value">{{ metadata.pluggy_version|default('N/A') }}</span>
+                            </div>
+                            {% for package, version in metadata.packages.items() %}
+                            <div class="env-item">
+                                <span class="meta-label">{{ package }}:</span>
+                                <span class="meta-value">{{ version }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Timeline Chart -->
+    <div class="card mt-4">
+        <div class="card-header timeline-header p-0">
+            <button class="w-100 text-start border-0 timeline-toggle-button" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#timelineContainer"
+                    aria-expanded="false" aria-controls="timelineContainer">
+                <div class="d-flex justify-content-between align-items-center py-2 px-3">
+                    <h5 class="mb-0">Test Execution Timeline</h5>
+                    <svg class="collapse-icon" fill="currentColor" height="16" viewBox="0 0 16 16" width="16">
+                        <path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>
+            </button>
+        </div>
+        <div class="collapse" id="timelineContainer">
+            <div class="card-body">
+                <div class="timeline-description font-weight-light">
+                    <div class="alert alert-info py-2">
+                        <p class="mb-1"><strong>Timeline Visualization Tool:</strong> Explore test execution flow,
+                            identify
+                            patterns, and diagnose performance issues</p>
+                        <ul class="mb-0 small">
+                            <li><strong>Filter by duration</strong> - Use the slider to focus on slow tests</li>
+                            <li><strong>Time-based zoom</strong> - Click and drag in the bottom area to zoom into
+                                specific
+                                time periods
+                            </li>
+                            <li><strong>Color-coded status</strong> - Tests are colored by their outcome for quick
+                                pattern
+                                identification
+                            </li>
+                            <li><strong>Worker distribution</strong> - See how tests were distributed across parallel
+                                worker
+                                processes
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-loading-container text-center py-5" id="timeline-loader">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2">Loading timeline data...</div>
+                </div>
+                <div class="mb-3 d-none" id="timeline-filter">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-label mb-0" for="duration-filter">
+                            Filter tests by minimum duration:
+                            <span class="text-body" id="min-duration-display">0s</span>
+                        </label>
+                        <button class="btn btn-link btn-sm p-0 text-muted" id="reset-filter" title="Reset filter"
+                                type="button">
+                            <svg fill="currentColor" height="14" viewBox="0 0 16 16" width="14"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <input class="form-range mt-2" id="duration-filter" type="range">
+                </div>
+                <div class="timeline d-none" id="timeline-container">
+                    <div class="timeline__body">
+                        <div class="timeline__chart">
+                            <svg class="timeline__chart_svg" id="timeline-chart" width="95%"></svg>
+                        </div>
+                        <div class="timeline__brush" style="margin-top: 16px;">
+                            <svg class="timeline__brush_svg" height="50" id="timeline-brush" width="95%"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Test Details Modal Placeholder -->
+<div id="testDetailsModalPlaceholder"></div>
+<footer class="footer-wrapper bg-dark text-white">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <hr class="my-0 border-light">
+                <div class="footer-text font-weight-light text-center">
+                    Goraved <br>
+                    2020–<span id="current-year"></span>.
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+<script>
+    function decompressData(compressedBase64) {
+    try {
+        // Decode Base64
+        const compressed = atob(compressedBase64);
+
+        // Convert string to Uint8Array
+        const uint8Array = new Uint8Array(compressed.length);
+        for (let i = 0; i < compressed.length; i++) {
+            uint8Array[i] = compressed.charCodeAt(i);
+        }
+
+        // Decompress using pako
+        const decompressed = pako.inflate(uint8Array, { to: 'string' });
+
+        // Parse JSON
+        return JSON.parse(decompressed);
+    } catch (error) {
+        console.error('Data decompression failed:', error);
+        console.error('Compressed data:', compressedBase64);
+        return [];
+    }
+}
+
+// Use Object.defineProperties for lazy loading
+Object.defineProperties(window, {
+    tests: {
+        get() {
+            return decompressData('{{ compressed_tests }}');
+        },
+        configurable: true
+    },
+    timeline_data: {
+        get() {
+            return decompressData('{{ compressed_timeline }}');
+        },
+        configurable: true
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    {{ js_content }}
+</script>
+</body>
+<!-- Test status wave section starts here -->
+<div class="test-status-wave" id="test-status-wave">
+    <svg class="waves" preserveAspectRatio="none" shape-rendering="auto"
+         viewBox="0 24 150 28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+            <path d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" id="gentle-wave"/>
+        </defs>
+        <g class="parallax">
+            <use fill="rgba(255,255,255,0.7)" x="48" xlink:href="#gentle-wave" y="0"/>
+            <use fill="rgba(255,255,255,0.5)" x="48" xlink:href="#gentle-wave" y="3"/>
+            <use fill="rgba(255,255,255,0.3)" x="48" xlink:href="#gentle-wave" y="5"/>
+            <use fill="rgba(255,255,255,0.1)" x="48" xlink:href="#gentle-wave" y="7"/>
+        </g>
+    </svg>
+</div>
+</html>
