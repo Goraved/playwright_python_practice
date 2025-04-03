@@ -19,5 +19,5 @@ jobs:
         pip install -r requirements.txt
     - name: Test with pylint
       run: |
-        pylint-fail-under *.py **/*.py --fail_under 9.8
+        pylint *.py **/*.py --fail-under 9.8
 
