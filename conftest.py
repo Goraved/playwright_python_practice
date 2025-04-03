@@ -68,7 +68,7 @@ def browser(playwright_instance) -> Browser:
     Environment Variables:
         HEADLESS: When 'true', runs the browser without a visible UI
     """
-    if os.getenv('HEADLESS', 'false') == 'true':
+    if os.getenv('HEADLESS', 'false') == 'true' or os.getenv('GITHUB_RUN') is not None:
         # Launch in headless mode (no visible browser window)
         browser = playwright_instance.chromium.launch(headless=True)
     else:
