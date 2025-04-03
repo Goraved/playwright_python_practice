@@ -20,6 +20,7 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           python -m pip install --upgrade pip
+          uv venv
           pip install flake8 pytest
           if [ -f requirements.txt ]; then uv pip install -r requirements.txt --upgrade; fi
       - name: Install browsers
