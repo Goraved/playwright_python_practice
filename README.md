@@ -1,8 +1,7 @@
 # Test Automation with Playwright Python
 
-This project uses a **[Page Object Model (POM)](https://martinfowler.com/bliki/PageObject.html)** architecture and *
-*Object-Oriented Programming (OOP)** approach to automate web interface testing using *
-*[Playwright](https://playwright.dev/python/docs/intro)**.
+This project uses a **[Page Object Model (POM)](https://martinfowler.com/bliki/PageObject.html)** architecture and 
+**Object-Oriented Programming (OOP)** approach to automate web interface testing using **[Playwright](https://playwright.dev/python/docs/intro)**.
 
 ---
 
