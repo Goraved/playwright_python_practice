@@ -28,4 +28,4 @@ jobs:
         env:
           GITHUB_RUN: True
         run: |
-          pytest
+          pytest tests
