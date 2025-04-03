@@ -1,8 +1,0 @@
-[FORMAT]
-max-line-length=120
-
-# Docstrings
-disable=C0114,C0115,C0116,W0603
-
-[MASTER]
-ignore=venv

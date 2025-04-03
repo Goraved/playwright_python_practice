@@ -17,4 +17,3 @@
  ### Notes:
  - @Goraved should be added to the assignees;
  - Tests should be passed;
- - Linter should be passed.
